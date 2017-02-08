@@ -1,6 +1,7 @@
 ---
 title: "Optimization and sampling methods Part 1: Introducing gradient descent"
 layout: post
+comments: true
 date: 2017-02-08 14:50
 headerImage: false
 published: true
