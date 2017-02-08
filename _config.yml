@@ -23,6 +23,7 @@ twitter_username: erlenddavidson
 github_username:  erlendd
 disqus:
     shortname: erlendblog
+google_analytics: UA-91644559-1
 
 # Build settings
 markdown: kramdown
