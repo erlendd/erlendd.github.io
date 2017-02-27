@@ -157,6 +157,7 @@ instead we use a range of higher-order integrators
 <video controls="controls" autoplay="autoplay" loop="loop">
   <source src="/assets/images/optimization/harmonic_oscillator_ps.mp4" type="video/mp4">
 </video>
+<br/>
 <div class="imgcap">
 Phase space (left subplot), showing the position and velocity of the harmonic 
 oscillator evolution with time. The corresponding position on the potential 
