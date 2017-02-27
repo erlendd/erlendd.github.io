@@ -154,11 +154,10 @@ In practice, while Euler's method is important it is never used to do full molec
 instead we use a range of higher-order integrators 
 (in particular **velocity Verlet** and **leapfrog**), which I'll cover in my next post.
 
-<div class="imgcap">
-<!--<img src="/assets/images/optimization/harmonic_oscillator_ps.gif" >-->
 <video controls="controls" autoplay="autoplay" loop="loop">
   <source src="/assets/images/optimization/harmonic_oscillator_ps.mp4" type="video/mp4">
 </video>
+<div class="imgcap">
 Phase space (left subplot), showing the position and velocity of the harmonic 
 oscillator evolution with time. The corresponding position on the potential 
 energy curve is shown in the right subplot.
