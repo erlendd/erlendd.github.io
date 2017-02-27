@@ -25,7 +25,7 @@ $$ y(x) = x^2. $$
 
 While this is a pretty simple problem, it actually describes an incredibly
 important physical model: the **harmonic oscillator** (i.e. a spring).
-It's immportant because it's one of the few problems in physics we can 
+It's important because it's one of the few problems in physics we can 
 actually solve exactly, and it turns out that even anharmonic functions 
 are approximately harmonic near their minimum.
 
@@ -89,7 +89,7 @@ the definition of differentiation, and here we used a Taylor series. Deriving th
 integrators using a Taylor series is useful because it's very clear where you 
 are truncating the series and therefore what the error in each step is. Note that in 
 the Euler method the step-error is \\(O(\Delta t^2)\\), however since a
-trajectory invovles \((N\)) steps of size \\(\Delta t = 1/N\\) then the total error 
+trajectory involves \((N\)) steps of size \\(\Delta t = 1/N\\) then the total error 
 is of the order \\(\Delta t\\).
 In part 3 we'll use the Taylor series to find more accurate, higher-order methods!
 
