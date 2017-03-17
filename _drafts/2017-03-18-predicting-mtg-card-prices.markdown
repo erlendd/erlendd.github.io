@@ -55,4 +55,133 @@ actual price data, and see if the neural network is able to model the mechanics.
 
 Neural networks are in the news a lot lately due to the huge amount of progress made on deep-learning in 
 the last decade. Here I'll use a type of recurrent neural network called an LSTM network 
-(LSTM stands for long short term memory) to predict the next future price 
+(LSTM stands for long short term memory) to predict the price of a Magic card one day into the future.
+ 
+# Setting up the data
+
+For now, I'm just going to generate some data that mimics the price movements of a typical magic card
+in response to being reprinted. This is helpful for two reasons: I can generate as much data as I need 
+to train the network, and I can experiment with the amount of noise in the data.
+This also simplifies the problem somewhat: as I'm mainly interested to see how well the model can pick 
+up on the effect a reprint has on the price.
+
+Here's a function to make a time-series of price and reprint status for our fictitious Magic card,
+{% highlight python %}
+def mkts(length=4001, y0=1.0):
+    reprint_log = [1] # card was printed at t0
+    y = [y0] # starting price
+    t_since_reprint = 0
+    for i in range(length-1):
+        reprint = 0
+        rdev = np.random.rand()
+        
+        if rdev > 0.995 and t_since_reprint > 300:
+            t_since_reprint = 0
+            reprint = 1
+        else:
+            t_since_reprint += 1
+            
+        trend = 0.005
+        if t_since_reprint > 0: # price doesn't instantly respond to reprints
+            if t_since_reprint < 20:
+                trend = -0.007
+            elif t_since_reprint < 200:
+                trend = -0.002
+        
+        reprint_log.append([reprint])
+        y.append(y[-1] + trend + np.random.randn()*0.00001)
+    return np.array(reprint_log), np.array(y)
+{% endhighlight %}
+
+Plotting the resulting price time-series (blue line) and the reprint status (green impulses) 
+gives the graph below. Overall the price trends up, but when there's a reprint the price drops for 
+the following 200 days. It's important to note that there is no intentional seasonality in the 
+price time-series here. The "card" was reprinted at random intervals (see the mkts() function), 
+and so it will be impossible to predict the resulting price drops with an autoregressive model. 
+<div class="imgcap">
+<img src="/assets/images/mtg/ts.png" width="600">
+Price (blue) and reprint-status (green).
+</div>
+
+As we specifically want the model to learn the response to reprints, I'm going to subtract 
+out the overall trend:
+{% highlight python %}
+gradient = (y[-1] - y[0])/len(y)print 'gradient:',gradient
+y = y - gradient * np.arange(len(y))
+{% endhighlight %}
+
+<div class="imgcap">
+<img src="/assets/images/mtg/ts_trendless.png" width="600">
+Price with the overall trend substracted (blue) and reprint-status (green).
+</div>
+
+Next, as I want to predict price *change* I'll use the differential time-series, which  
+is the difference between the current price and the previous one (sometimes called *returns*), 
+and standardize the data to speed up training of the network.
+This is standard pracitce, but if you want to see the details of this, see the Jupyter notebook here.
+
+## Setting up the neural network
+
+I wrong a very simple neural network model using Keras, which is an excellent Python library 
+for quickly prototyping ideas. It's really just a wrapper on top of Tensorflow (or Theano if you 
+prefer) but it handles training and data augmentation tasks very elegantly.
+See the [Keras documentation](https://keras.io/layers/recurrent/#lstm), 
+and also [this example](https://github.com/fchollet/keras/blob/master/examples/stateful_lstm.py), for details.
+
+{% highlight python %}
+# batch size of 100 samples, 1 time-step with 2 features...
+model = Sequential()
+model.add(LSTM(12, batch_input_shape=(100, 1, 2), 
+               stateful=True, return_sequences=False))
+model.add(Dropout(0.25))
+model.add(Dense(1)) # just a single output from the network
+model.compile(loss='mean_squared_error', optimizer='adam')
+
+# as we're using a stateful LSTM layer, we need to train 
+# on epoch at a time and reset the cell states between epochs.
+nb_epochs = 100
+for i in range(nb_epochs):
+    model.fit(Xrnn[:-1000], ydiff[:-1000], 
+              nb_epoch=1, batch_size=100, 
+              verbose=2, shuffle=False)
+    model.reset_states()
+{% endhighlight %}
+
+This trains in a few seconds, and you should notice the loss decreases 
+each iteration:
+
+<div class="imgcap">
+<img src="/assets/images/mtg/trainloss.png" >
+Training loss (mean squared error) vs. epochs.
+</div>
+
+## Testing the model (getting out predictions)
+
+So far we made some data that looks like the daily price time-series for a typical 
+Magic: The Gathering card, as it undergoes several reprints. We then represented this 
+in a form that's tractable using machine-learning and we just trained a recurrent 
+neural network to predict the next price move (given the last price move and an 
+attribute indicating whether or not the card was reprinted).
+
+From the training loss above, things are looking quite positive, but neural networks 
+can easily overfit to the training data and so we need to see how well our model
+generalizes to unseen data.
+
+{% highlight python %}
+# get predictions for the unseen data
+preds = model.predict(Xrnn[-1000:], batch_size=100).flatten()
+# reverse the standardization we did above
+unscaled_preds = mm.inverse_transform(preds)
+shift = y[-1000] # the last y-value (price-value) in the training set
+# use cummulative sum to go from the returns-series to the time-series
+predicted_prices = np.cumsum(unscaled_preds) + shift
+{% endhighlight %}
+
+<div class="imgcap">
+<img src="/assets/images/mtg/predictions.png" >
+Predictions from our neural network model! The left plot shows predictions over 
+the whole testing set, while the right plot shows a zoomed in region (to verify 
+that the predictions aren't just a lagged copy of the input data).
+</div>
+
+
