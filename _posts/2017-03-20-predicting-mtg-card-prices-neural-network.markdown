@@ -229,7 +229,7 @@ to a small drop in price for the subsequent 200 days).
 - We implemented a small neural network, utilising the LSTM layer to predict these 
 price movements, one day in advance. 
 
-- This is all really simplistic, but it demonstrates how LSTM networks are be used
+- This is all really simplistic, but it demonstrates how LSTM networks can be used
 to predict time-series *in response to external stimuli*.
 If we were to replace the LSTM layer in our code above with a Keras dense layer 
 (i.e. a fully-connected layer) then the network would fail to predict accurately.
