@@ -2,7 +2,7 @@
 title: "Predicting the price of Magic: The Gathering cards after they are reprinted"
 layout: post
 comments: true
-date: 2017-03-16 17:00
+date: 2017-03-20 11:00
 headerImage: false
 published: true
 tag:
