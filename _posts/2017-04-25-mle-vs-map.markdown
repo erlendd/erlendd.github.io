@@ -1,0 +1,117 @@
+---
+title: "A fast comparison of maximum likelihood estimation vs. maximum a-posteriori"
+layout: post
+comments: true
+date: 2017-04-25
+headerImage: false
+published: true
+tag:
+- optimization
+- maths
+- neural networks
+- artificial intelligence
+- convolutional neural networks
+- computer vision
+- machine learning
+- Bayesian statistics
+description: Convolutional neural network models for visual tasks need an enormous
+---
+
+The maximum likelihood estimation (MLE) and maximum a posterior (MAP) are two ways of estimating a parameter given 
+observed data. Here I'll compare them, by applying both methods to a really simple problem in 1-dimension 
+(based on the univariate Gaussian distribution). 
+The same basic methodology forms the concepts used to derive more powerful Bayesian methods like 
+[Bayesian linear regression](https://en.wikipedia.org/wiki/Bayesian_linear_regression) and even 
+[Gaussian processes](https://en.wikipedia.org/wiki/Gaussian_process).
+
+Imagine we buy a small box of \\(N\\) pencils. The box says the pencils are 6cm long, but as there seems to be 
+some variation you want a better estimate and so you measure each pencil. 
+This gives us some data, i.e.
+
+$$ D = {x_1, x_2, \ldots, x_N}. $$
+
+We'll call our best estimate \\(\theta\\), which is commonly used to denote the parameter in probability theory.
+One way to find an estimate of \\(\theta\\) is to recognise that we have a distribution of measured pencil 
+lengths in \\(D\\), and to find a value for \\(\theta\\) that maximises the likelihood of this distribution. 
+This is known as the **maximum likelihood estimate**,
+
+$$ \theta_{MLE} = \text{argmax}_{\theta} p(D|\theta). $$
+
+By assuming that our measurements in \\(D\\) are i.i.d (independent and identically distributed) then we 
+can rewrite the above as,
+
+$$ \theta_{MLE} = \text{argmax}_{\theta} \prod_{i=1}^N{p(x_i|\theta)}. $$
+
+We can now take each \\( p(x_i\|\theta) \\) to be 
+[normally distributed](https://en.wikipedia.org/wiki/Normal_distribution) 
+with mean $$\theta$$ and variance $$\sigma^2$$, i.e. $$\mathscr{N}(\theta,\sigma^2)$$, and so, 
+
+$$ \theta_{MLE} = \text{argmax}_{\theta} \left(\frac{1}{\sqrt{2\pi\sigma}}\right)^N \text{exp}\left(-\frac{1}{2\sigma^2} \sum_{i=1}^N{(x_i - \theta)}\right). $$
+
+To find the MLE, we need to find the value of \\(\theta\\) that maximises the above expression. 
+First we'll take the log of everything to simplify the maths (this is valid as taking the log
+is a [monotonic function](https://en.wikipedia.org/wiki/Monotonic_function)), and then we'll 
+differentiate to find the stationary points.
+
+$$ \text{log}(p(D|\theta)) = -\frac{N}{2} \text{log}(2\pi\sigma^2) -\frac{1}{2\sigma^2}\sum_{i=1}^{N}(x_i-\theta)^2. $$
+
+$$ 
+\begin{align}
+\frac{\partial}{\partial\theta}\text{log}(p(D|\theta)) &= \frac{1}{2\sigma^2}\sum_{i=1}^{N}2(x_i-\theta) \newline
+ &= \frac{1}{\sigma^2}\sum_{i=1}^{N}(x_i - \theta) \newline
+ &= 0 \: \text{(for stationary points)}. \newline
+\end{align}
+$$
+
+Solving for \\(\theta\\) then gives us the result $$ \theta = \frac{1}{N}\sum_{i=1}^N x_i, $$
+which is just the arithmetic mean of the measured samples.
+
+## Maximum a posteriori estimate (MAP)
+
+The MLE assumes no **prior knowledge** of the expected length of a pencil, however we said above 
+that the box of pencils states they are around 6cm long, so surely we should use this?
+Using a prior like this is a [Bayesian approach](https://en.wikipedia.org/wiki/Bayesian_probability) 
+to the problem, and involves using the data to find a distribution for \\(\theta\\).
+
+The MAP estimate is written as,
+
+$$ 
+\begin{align}
+\theta_{MAP} = \text{argmax}_{\theta} \, p(\theta|D). 
+\end{align}
+$$
+
+Using [Bayes' theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem) 
+(and recognising that p(D) is independent of \theta) we get something that 
+looks pretty close to the MLE case,
+
+$$ \theta_{MAP} = \text{argmax}_{\theta}\, p(D|\theta)\,p(\theta). $$
+
+The \\(p(\theta)\\) term represents our prior belief, i.e. what we believe before we 
+start making measurements. Here we will assume it is normally distributed with mean $$\mu_p$$
+and variance $$\sigma_p^2$$: $$\mathscr{N}(\mu_p, \sigma_p^2)$$.
+The approach will be very similar: we take the log, and then differentiate to find the stationary points.
+
+$$ log(\theta_{MAP}) = \text{argmax}_{\theta} \{log(p(D|\theta)) + log(p(\theta))\}. $$
+
+Find stationary points,
+
+$$ \begin{align}
+\frac{\partial}{\partial\theta}(log(p(D|\theta)) + log(p(\theta))) &= 0 \newline
+\implies \frac{1}{\sigma^2}\sum_{i=1}^N(x_i - \theta) + \frac{\partial}{\partial\theta}\left(-\frac{1}{2\sigma_p^2}(\theta-\mu)^2\right) &= 0 \newline
+\implies \frac{1}{\sigma^2}\sum_{i=1}^N(x_i - \theta) + \frac{1}{\sigma_p^2}(\mu_p - \theta) &= 0 \newline
+\end{align} $$
+
+After some algebra, we get the result,
+
+$$
+\theta = \frac{\sigma^2 \mu_p \,+\, \sigma_p^2\sum_{i=1}^N{x_i}}{\sigma^2 + N\sigma_p^2} = \frac{\sigma_p^2 N \bar{x} + \sigma^2\mu_p}{N\sigma_p^2 + \sigma^2}.
+$$
+
+So the MAP estimate is just a linear combination of the sample and prior means 
+(actually it is a [convex combination](https://en.wikipedia.org/wiki/Convex_combination)).
+It's also useful to see that as \\(N\to\infty\\), the MAP estimate for \\(\theta\\) reduces to the MLE estimate.
+Referring back to our *pencils in a box* example, this makes intuitive sense: we were told the pencils should be
+6cm long (our prior belief), but after we've observed enough data we'll start having a stronger belief 
+in our measured sample mean.
+
