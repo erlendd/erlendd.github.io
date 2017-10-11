@@ -263,3 +263,43 @@ video {
     color: #505050;
     padding-bottom: 16px
 }
+
+.job_title {
+	width: 100%;
+	display: table;
+	border-collapse: collapse;
+}
+
+.job_title div:first-child {
+    display: table-row;
+	border-style: none; 
+	border-width: 0 0 1px 0;
+	border-color: #A0A0A0;
+}
+
+.job_title div:first-child h3 {
+	display: table-cell;
+	text-align: left;
+	padding-top: 0px;
+        font-weight: bold;
+       
+}
+
+.job_title div:first-child p {
+	display: table-cell; 
+	text-align: right;
+	padding-top: 0px;
+}
+
+.job_title div:last-child h4 {
+	display: table-cell;
+	text-align: left;
+	padding-top: 0px;
+	font-style: italic;
+        padding-bottom: 5px;
+}
+
+.job_details li p {
+	line-height: 1.2em;
+	margin-top: 0;	
+}
