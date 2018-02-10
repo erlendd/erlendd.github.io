@@ -28,7 +28,7 @@ $$ V(N) = \alpha \, \frac{N(N-1)}{2}  $$
 Note that each node in the network adds the same value, and a network with one node has a value of zero. The \\(\alpha\\) prefactor is 
 simply empirically chosen, and is essentially the average value each link brings to the network.
 
-
+Metcalfe's law was originally devised as a way of valuing physical telephony and computer networks. The cost of the network
 
 There are some shortcomings with Metcalfe's law. In particular the prefactor \\(\alpha\\) is constant for all values of \\(N\\), which assumes that 
 new nodes increase the value of the network just as much as far older nodes. 
@@ -36,6 +36,9 @@ For this reason a few alternatives have been suggested, including Zipf's law for
 
 ## Zipf's law
 
+Zipf's law is an empirical model for describing unequal resource distribution, first observed in written language by examining 
+the frequency with which words appear in text. The most frequent word appears twice as much as the second most frequent word, and three times
+as much as the third most common word and so on.
 
 
 ## References
