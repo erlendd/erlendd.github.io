@@ -34,6 +34,20 @@ There are some shortcomings with Metcalfe's law. In particular the prefactor \\(
 new nodes increase the value of the network just as much as far older nodes. 
 For this reason a few alternatives have been suggested, including Zipf's law for large networks [2].
 
+Metcalfe's law was originally used to determine the size at which physical (telephony or ethernet) networks become cost effective. 
+The cost of a network can be written as \\(c_r + c_N N\\), where \\(c_r\\) is the cost of the router (or infrastrature cost) and 
+\\(c_N\\) is the cost of each node. 
+Since the cost of a network increases with \\(O(N)\\ and the )
+value of that network increases with \\(O(N^2)\\), larger networks are typically more cost effective.
+This idea become a huge marketing tool for the early network dotcom companies.
+
+Some argume that there are some shortcomings with Metcalfe's law [2].
+In particular the prefactor \\(\alpha\\) is constant for all values of \\(N\\), which assumes that 
+new nodes increase the value of the network just as much as far older nodes.
+Furthermore the \\(O(N^2)\\) value growth is clearly unsustainable in as \\(N \rightarrow \infty\\).
+For this reason a few alternatives have been suggested, the most popular being Zipf's law for large networks.
+>>>>>>> Stashed changes
+
 ## Zipf's law
 
 Zipf's law is an empirical model for describing unequal resource distribution, first observed in written language by examining 
