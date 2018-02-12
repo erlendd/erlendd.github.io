@@ -38,8 +38,15 @@ For this reason a few alternatives have been suggested, including Zipf's law for
 
 Zipf's law is an empirical model for describing unequal resource distribution, first observed in written language by examining 
 the frequency with which words appear in text. The most frequent word appears twice as much as the second most frequent word, and three times
-as much as the third most common word and so on.
+as much as the third most common word and so on. 
 
+To see how Zipf's law can be applied to our valuation problem, consider a network where the participants utilise the network 
+at frequencies proportional to their rank in the network: i.e. the \\(k^{th}\\) user uses the network \\(1/k\\) times 
+(relative to the other network participants). For large \\(N\\) the sum of these terms approaches \\(N\,log(N)\\). 
+
+It has recently been suggested that Zip's law is a better than Metcalfe's law for valuing networks, 
+because it accounts for the fact not all users contribute equally [2]. This idea is refuted by Metcalfe, as he points out 
+Zip's law has the same "explosive growth" potential (increases towards infinity with large \\(N\\)).
 
 ## References
 
