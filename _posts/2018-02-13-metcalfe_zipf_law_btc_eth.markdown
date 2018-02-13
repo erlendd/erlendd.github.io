@@ -2,7 +2,7 @@
 title: "Modelling Bitcoin / Ethereum prices using Metcalfe's / Zipf's law"
 layout: post
 comments: true
-date: 2018-02-09 14:50
+date: 2018-02-13 14:30
 headerImage: false
 published: true
 tag:
