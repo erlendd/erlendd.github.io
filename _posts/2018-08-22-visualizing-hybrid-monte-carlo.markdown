@@ -2,7 +2,7 @@
 title: "Visualising Hamiltonian Monte Carlo"
 layout: post
 comments: true
-date: 2017-02-27 17:00
+date: 2018-08-22 15:00
 headerImage: false
 published: true
 tag:
