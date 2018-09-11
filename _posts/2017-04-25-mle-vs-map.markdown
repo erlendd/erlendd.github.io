@@ -14,7 +14,7 @@ tag:
 - computer vision
 - machine learning
 - Bayesian statistics
-description: Convolutional neural network models for visual tasks need an enormous
+description: MLE vs MAP, in a simple example.
 ---
 
 The maximum likelihood estimation (MLE) and maximum a posterior (MAP) are two ways of estimating a parameter given 
